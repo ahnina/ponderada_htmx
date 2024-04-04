@@ -1,0 +1,32 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Teste de Movimento do Robô</title>
+    <script src="https://cdn.jsdelivr.net/npm/htmx.org/dist/htmx.js"></script>
+</head>
+<body>
+    <h1>Teste de Movimento do Robô</h1>
+    <button hx-post="/move_robot" hx-target="#log" 
+    name="command" value="+10 em x">Movimento positivo em x</button>
+    <button hx-post="/move_robot" hx-target="#log" 
+    name="command" value="-10 em x">Movimento negativo em x</button>
+    <button hx-post="/move_robot" hx-target="#log" 
+    name="command" value="+10 em y">Movimento positivo em y</button>
+    <button hx-post="/move_robot" hx-target="#log" 
+    name="command" value="-10 em y">Movimento negativo em y</button>
+    <button hx-post="/move_robot" hx-target="#log" 
+    name="command" value="+10 em z">Movimento positivo em z</button>
+    <button hx-post="/move_robot" hx-target="#log" 
+    name="command" value="-10 em z">Movimento negativo em z</button>
+    <button hx-post="/move_robot" hx-target="#log"
+    name="command" value="ligar atuador">Ligar atuador</button>
+    <button hx-post="/move_robot" hx-target="#log" 
+    name="command" value="desligar atuador">Desligar atuador</button>
+    <!-- <h1> Logs de comandos</h1> -->
+    <!-- <div id="log" hx-get="/get_commands"> 
+        Log de comandos será atualizado dinamicamente aqui
+    </div> -->
+</body>
+</html>
