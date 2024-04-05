@@ -3,6 +3,7 @@ from flask import Flask, render_template, jsonify, request
 from tinydb import TinyDB, Query
 from pydobot import Dobot
 from serial.tools import list_ports
+from datetime import datetime
 import time
 import pydobot
 import inquirer
@@ -11,7 +12,6 @@ import inquirer
 app = Flask(__name__)
 db = TinyDB('database.json')
 # robo = pydobot.Dobot(port=port, verbose=False)
-robo = None
 def conectar():
     available_ports = list_ports.comports()
 
@@ -29,61 +29,59 @@ def index():
 
 @app.route('/move_robot', methods=['POST'])
 def move_robot():
-    # if request.method == 'POST':
-        if not robo:
-            conectar()
         command = request.form['command']
         movimento(command)
         # Simulando movimento do robô
         time.sleep(2)
-        db.insert({'command': command, 'timestamp': time.time()})
+        db.insert({'command': command, 'timestamp': datetime.now().isoformat()})
         time.sleep(2)
-    # else:
-    #  return (get_commands())
-        
+        return (get_commands())
+    
 @app.route('/get_commands', methods=['GET'])
 def get_commands():
     commands = db.all()
-    return jsonify(commands)
+    return render_template('logs.html', itens=commands)
 
 
 def movimento(command):
-    if command == "+10 em x":
+    if command == "conectar":
+        conectar()
+    
+    elif command == "+50 em x":
         (x, y, z, r, j1, j2, j3, j4) = robo.pose()
-        deslocamento= 10
+        deslocamento= 50
         robo.move_to(x + deslocamento, y, z, r, wait=True) 
-        robo.close()
-    elif command == "-10 em x":
+    elif command == "-50 em x":
         (x, y, z, r, j1, j2, j3, j4) = robo.pose()
-        deslocamento= -10
+        deslocamento= -50
         robo.move_to(x + deslocamento, y, z, r, wait=True) 
-        robo.close()
-    elif command == "+10 em y":
+        
+    elif command == "+50 em y":
         (x, y, z, r, j1, j2, j3, j4) = robo.pose()
-        deslocamento= 10
+        deslocamento= 50
         robo.move_to(x, y + deslocamento, z, r, wait=True) 
-        robo.close()
-    elif command == "-10 em y":
+        
+    elif command == "-50 em y":
         (x, y, z, r, j1, j2, j3, j4) = robo.pose()
-        deslocamento= -10
+        deslocamento= -50
         robo.move_to(x, y + deslocamento, z, r, wait=True) 
-        robo.close()
-    elif command == "+10 em z":
+    
+    elif command == "+50 em z":
         (x, y, z, r, j1, j2, j3, j4) = robo.pose()
-        deslocamento= 10
+        deslocamento= 50
         robo.move_to(x, y, z + deslocamento, r, wait=True) 
-        robo.close()
-    elif command == "-10 em z":
+        
+    elif command == "-50 em z":
         (x, y, z, r, j1, j2, j3, j4) = robo.pose()
-        deslocamento= -10
+        deslocamento= -50
         robo.move_to(x, y, z + deslocamento, r, wait=True) 
-        robo.close()
+        
     elif command == "ligar atuador":
         robo.suck(True)
-        robo.close()
+        
     elif command == "desligar atuador":
         robo.suck(False)
-        robo.close()
+        
     
 if __name__ == '__main__':
     app.run(debug=True)
